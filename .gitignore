@@ -27,7 +27,7 @@
 *.lai
 *.la
 *.a
-*.lib
+!*.lib
 
 # Executables
 *.exe
@@ -156,10 +156,6 @@ gradle-app.setting
 .settings/
 bin/
 imgui.ini
-
-#Force not ignore
-
-!lib/
 
 
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
