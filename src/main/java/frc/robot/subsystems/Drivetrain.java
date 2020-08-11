@@ -22,14 +22,10 @@ import harkerrobolib.subsystems.HSDrivetrain;
 import harkerrobolib.util.Conversions;
 import harkerrobolib.wrappers.HSTalon;
 
-public class Drivetrain 
+public class Drivetrain
 {
     private static final Drivetrain drivetrain;
     private static boolean isFinished = true;
-
-    
-
-
 
     private Drivetrain() 
     {
