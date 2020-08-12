@@ -35,9 +35,13 @@ public class Drivetrain extends SubsystemBase {
     private static boolean leftSensorPhase = false;
     private static boolean rightSensorPhase = false;
 
-    private static final double P = 1;
-    private static final double I = 1;
-    private static final double D = 1;
+    private static final double RIGHT_P = 1;
+    private static final double RIGHT_I = 1;
+    private static final double RIGHT_D = 1;
+
+    private static final double LEFT_P = 1;
+    private static final double LEFT_I = 1;
+    private static final double LEFT_D = 1;
     private static final double SLOT_INDEX;
 
     private Drivetrain() {
@@ -72,13 +76,13 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void configPositionPIDConstants() {
-        leftMaster.config_kP(p);
-        leftMaster.config_kI(i);
-        leftMaster.config_kD(d);
+        leftMaster.config_kP(LEFT_P);
+        leftMaster.config_kI(LEFT_I);
+        leftMaster.config_kD(LEFT_D);
 
-        rightMaster.config_kP(p);
-        rightMaster.config_kI(i);
-        rightMaster.config_kD(d);
+        rightMaster.config_kP(RIGHT_P);
+        rightMaster.config_kI(RIGHT_I);
+        rightMaster.config_kD(RIGHT_D);
 
         selectProfileSlot(SLOT_INDEX, RobotMap.LOOP_INDEX);
         
