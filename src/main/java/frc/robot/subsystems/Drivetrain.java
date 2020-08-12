@@ -25,13 +25,20 @@ import harkerrobolib.*;
 
 public class Drivetrain extends SubsystemBase {
     private static final Drivetrain drivetrain;
-    private static boolean isFinished = true;
 
 
-    private static final boolean LEFT_MASTER_INVERTED = true;
-    private static final boolean LEFT_FOLLOWER_INVERTED = true;
+    private static final boolean LEFT_MASTER_INVERTED = false;
+    private static final boolean LEFT_FOLLOWER_INVERTED = false;
     private static final boolean RIGHT_MASTER_INVERTED = false;
     private static final boolean RIGHT_FOLLOWER_INVERTED = false;
+
+    private static boolean leftSensorPhase = false;
+    private static boolean rightSensorPhase = false;
+
+    private static final double P = 1;
+    private static final double I = 1;
+    private static final double D = 1;
+    private static final double SLOT_INDEX;
 
     private Drivetrain() {
         HSTalon leftMaster = new HSTalon();
@@ -50,10 +57,11 @@ public class Drivetrain extends SubsystemBase {
     public void talonInit() {
         resetTalons();
         followMasters();
-        invertTalons(LEFT_MASTER_INVERTED, LEFT_FOLLOWER_INVERTED, RIGHT_MASTER_INVERTED, RIGHT_FOLLOWER_INVERTED)
+        invertTalons(LEFT_MASTER_INVERTED, LEFT_FOLLOWER_INVERTED, RIGHT_MASTER_INVERTED, RIGHT_FOLLOWER_INVERTED);
 
-        leftFollower.follow(leftMaster);
-        rightFollower.follow(rightMaster);
+
+        leftMaster.setSensorPhase(leftSensorPhase);
+        rightMaster.setSensorPhase(rightSensorPhase);
     }
 
     private void resetTalons() {
@@ -61,6 +69,21 @@ public class Drivetrain extends SubsystemBase {
         leftFollower.reset();
         rightMaster.reset();
         rightFollower.reset();
+    }
+
+    public void configPositionPIDConstants() {
+        leftMaster.config_kP(p);
+        leftMaster.config_kI(i);
+        leftMaster.config_kD(d);
+
+        rightMaster.config_kP(p);
+        rightMaster.config_kI(i);
+        rightMaster.config_kD(d);
+
+        selectProfileSlot(SLOT_INDEX, RobotMap.LOOP_INDEX);
+        
+        leftMaster.configSelectedFeedbackSensor(CTRE_MagEncoder_Reletive, RobotMap.LOOP_INDEX, 0);
+        rightMaster.configSelectedFeedbackSensor(CTRE_MagEncoder_Reletive, RobotMap.LOOP_INDEX, 0);
     }
 
     private void followMasters() {
@@ -74,7 +97,12 @@ public class Drivetrain extends SubsystemBase {
         rightMaster.setInverted(rightMasterInverted);
         rightFollower.setInverted(rightFollowerInverted);
     }
-    
+
+
+    public void setPercentOutput(double x, double y){
+        leftMaster.set(ControlMode.PercentOutput, y + x);
+        rightMaster.set(ControlMode.PercentOutput, y - x);
+    }
     /* public moveForward() {
 
     }
