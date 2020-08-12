@@ -21,15 +21,23 @@ import frc.robot.commands.drivetrain.DriveWithVelocity;
 import harkerrobolib.subsystems.HSDrivetrain;
 import harkerrobolib.util.Conversions;
 import harkerrobolib.wrappers.HSTalon;
+import harkerrobolib.*;
 
-public class Drivetrain
-{
+public class Drivetrain extends SubsystemBase {
     private static final Drivetrain drivetrain;
     private static boolean isFinished = true;
 
-    private Drivetrain() 
-    {
-        
+
+    private static final boolean LEFT_MASTER_INVERTED = true;
+    private static final boolean LEFT_FOLLOWER_INVERTED = true;
+    private static final boolean RIGHT_MASTER_INVERTED = false;
+    private static final boolean RIGHT_FOLLOWER_INVERTED = false;
+
+    private Drivetrain() {
+        HSTalon leftMaster = new HSTalon();
+        HSTalon leftFollower = new HSTalon();
+        HSTalon rightMaster = new HSTalon();
+        HSTalon rightFollower = new HSTalon();
     }
 
     public static getInstance() {
@@ -39,6 +47,34 @@ public class Drivetrain
         return drivetrain;
     }
 
+    public void talonInit() {
+        resetTalons();
+        followMasters();
+        invertTalons(LEFT_MASTER_INVERTED, LEFT_FOLLOWER_INVERTED, RIGHT_MASTER_INVERTED, RIGHT_FOLLOWER_INVERTED)
+
+        leftFollower.follow(leftMaster);
+        rightFollower.follow(rightMaster);
+    }
+
+    private void resetTalons() {
+        leftMaster.reset();
+        leftFollower.reset();
+        rightMaster.reset();
+        rightFollower.reset();
+    }
+
+    private void followMasters() {
+        leftFollower.follow(leftMaster);
+        rightFollower.follow(rightMaster);
+    }
+
+    private void invertTalons(boolean leftMasterInverted, boolean leftFollowerInverted, boolean rightMasterInverted, boolean rightFollowerInverted) {
+        leftMaster.setInverted(leftMasterInverted);
+        leftFollower.setInverted(leftFollowerInverted);
+        rightMaster.setInverted(rightMasterInverted);
+        rightFollower.setInverted(rightFollowerInverted);
+    }
+    
     /* public moveForward() {
 
     }
