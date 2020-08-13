@@ -44,18 +44,42 @@ public class Drivetrain extends SubsystemBase {
     private static final double LEFT_D = 1;
     private static final double SLOT_INDEX;
 
+    private HSTalon leftMaster;
+    private HSTalon leftFollower;
+    private HSTalon rightMaster;
+    private HSTalon rightFollower;
+
     private Drivetrain() {
-        HSTalon leftMaster = new HSTalon();
-        HSTalon leftFollower = new HSTalon();
-        HSTalon rightMaster = new HSTalon();
-        HSTalon rightFollower = new HSTalon();
-    }
+        leftMaster = new HSTalon(RobotMap.DRIVE_IDS[0]);
+        leftFollower = new HSTalon(RobotMap.DRIVE_IDS[1]);
+        rightMaster = new HSTalon(RobotMap.DRIVE_IDS[2]);
+        rightFollower = new HSTalon(RobotMap.DRIVE_IDS[8]);
+
+        talonInit();
+        Drivetrain.configPositionPIDConstants();
+    }    
 
     public static getInstance() {
         if(drivetrain == null) {
             drivetrain = new Drivetrain();
         }
         return drivetrain;
+    }
+
+    public HSTalon getLeftMaster() {
+        return leftMaster;
+    }
+
+    public HSTalon getLeftFollower() {
+        return leftFollower;
+    }
+
+    public HSTalon getRightMaster() {
+        return rightMaster;
+    }
+
+    public HSTalon getRightFollower() {
+        return rightFollower;
     }
 
     public void talonInit() {
@@ -84,10 +108,11 @@ public class Drivetrain extends SubsystemBase {
         rightMaster.config_kI(RIGHT_I);
         rightMaster.config_kD(RIGHT_D);
 
-        selectProfileSlot(SLOT_INDEX, RobotMap.LOOP_INDEX);
+        leftMaster.selectProfileSlot(SLOT_INDEX, RobotMap.LOOP_INDEX);
+        rightMaster.selectProfileSlot(SLOT_INDEX, RobotMap.LOOP_INDEX);
         
-        leftMaster.configSelectedFeedbackSensor(CTRE_MagEncoder_Reletive, RobotMap.LOOP_INDEX, 0);
-        rightMaster.configSelectedFeedbackSensor(CTRE_MagEncoder_Reletive, RobotMap.LOOP_INDEX, 0);
+        leftMaster.configSelectedFeedbackSensor(CTRE_MagEncoder_Relative, RobotMap.LOOP_INDEX, 0);
+        rightMaster.configSelectedFeedbackSensor(CTRE_MagEncoder_Relative, RobotMap.LOOP_INDEX, 0);
     }
 
     private void followMasters() {
@@ -107,6 +132,7 @@ public class Drivetrain extends SubsystemBase {
         leftMaster.set(ControlMode.PercentOutput, y + x);
         rightMaster.set(ControlMode.PercentOutput, y - x);
     }
+
     /* public moveForward() {
 
     }
