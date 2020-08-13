@@ -1,19 +1,24 @@
-package frc.robot;
-import edu.wpi.first.wpilibj.CommandBase;
+package frc.robot.commands.drivetrain;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotMap;
+import frc.robot.subsystems.Drivetrain;
 
 public class DriveToPosition extends CommandBase {
     private int encoderPosition;
     private final int ERROR_THRESHOLD = 50;
-    public DriveToPosition(final int ticks){
+    public DriveToPosition(final int ticks) {
         addRequirements(Drivetrain.getInstance());
-        encoderPositions = ticks;
+        encoderPosition = ticks;
     }
     @Override
     public void initialize() {
         super.initialize();
         
-        Drivetrain.getInstance().getLeftMaster().setSelectedSendorPosition(0, RobotMap.LOOP_INDEX, 0);
-        Drivetrain.getInstance().getRightMaster().setSelectedSendorPosition(0, RobotMap.LOOP_INDEX, 0);
+        Drivetrain.getInstance().getLeftMaster().setSelectedSensorPosition(0, RobotMap.LOOP_INDEX, 0);
+        Drivetrain.getInstance().getRightMaster().setSelectedSensorPosition(0, RobotMap.LOOP_INDEX, 0);
     }
 
     @Override
@@ -24,7 +29,8 @@ public class DriveToPosition extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        return (Drivetrain.getInstance().getLeftMaster().getCloseLoopError(RobotMap.LOOP_INDEX) < ERROR_THRESHOLD && Drivetrain.getInstance().getRightMaster().getCloseLoopError(RobotMap.LOOP_INDEX) < ERROR_THRESHOLD);
+        return (Drivetrain.getInstance().getLeftMaster().getClosedLoopError(RobotMap.LOOP_INDEX) < ERROR_THRESHOLD
+                && Drivetrain.getInstance().getRightMaster().getClosedLoopError(RobotMap.LOOP_INDEX) < ERROR_THRESHOLD);
     }
     @Override
     public void end(final boolean interrupted) {

@@ -17,11 +17,11 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import frc.robot.RobotMap;
-import frc.robot.commands.drivetrain.DriveWithVelocity;
-import harkerrobolib.subsystems.HSDrivetrain;
 import harkerrobolib.util.Conversions;
 import harkerrobolib.wrappers.HSTalon;
 import harkerrobolib.wrappers.HSGamepad;
+import harkerrobolib.wrappers.XboxGamepad;
+
 
 public class OI {
     private static OI oi;
@@ -30,8 +30,9 @@ public class OI {
     private HSGamepad operatorGamepad;
 
     private OI() {
-        driverGamepad = new HSGamepad(RobotMap.DRIVER_PORT);
-        operatorGamepad = new HSGamepad(RobotMap.OPERATOR_PORT);
+        driverGamepad = new XboxGamepad(RobotMap.DRIVER_PORT);
+        operatorGamepad = new XboxGamepad(RobotMap.OPERATOR_PORT);
+        
     }    
 
     public HSGamepad getDriverGamepad() {

@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 /**
  * Creates a drivetrain.
@@ -10,21 +10,19 @@ package frc.robot;
  * @since August 11, 2020
  */
 
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 
 import frc.robot.RobotMap;
-import frc.robot.commands.drivetrain.DriveWithVelocity;
-import harkerrobolib.subsystems.HSDrivetrain;
-import harkerrobolib.util.Conversions;
 import harkerrobolib.wrappers.HSTalon;
-import harkerrobolib.*;
 
 public class Drivetrain extends SubsystemBase {
-    private static final Drivetrain drivetrain;
+    private static  Drivetrain drivetrain;
 
 
     private static final boolean LEFT_MASTER_INVERTED = false;
@@ -42,7 +40,6 @@ public class Drivetrain extends SubsystemBase {
     private static final double LEFT_P = 1;
     private static final double LEFT_I = 1;
     private static final double LEFT_D = 1;
-    private static final double SLOT_INDEX;
 
     private HSTalon leftMaster;
     private HSTalon leftFollower;
@@ -56,11 +53,11 @@ public class Drivetrain extends SubsystemBase {
         rightFollower = new HSTalon(RobotMap.DRIVE_IDS[3]);
 
         talonInit();
-        Drivetrain.configPositionPIDConstants();
-    }    
+        configPositionPIDConstants();
+    }
 
     public static Drivetrain getInstance() {
-        if(drivetrain == null) {
+        if (drivetrain == null) {
             drivetrain = new Drivetrain();
         }
         return drivetrain;
@@ -87,32 +84,31 @@ public class Drivetrain extends SubsystemBase {
         followMasters();
         invertTalons(LEFT_MASTER_INVERTED, LEFT_FOLLOWER_INVERTED, RIGHT_MASTER_INVERTED, RIGHT_FOLLOWER_INVERTED);
 
-
         leftMaster.setSensorPhase(leftSensorPhase);
         rightMaster.setSensorPhase(rightSensorPhase);
     }
 
     private void resetTalons() {
-        leftMaster.reset();
-        leftFollower.reset();
-        rightMaster.reset();
-        rightFollower.reset();
+        leftMaster.configFactoryDefault();
+        leftFollower.configFactoryDefault();
+        rightMaster.configFactoryDefault();
+        rightFollower.configFactoryDefault();
     }
 
     public void configPositionPIDConstants() {
-        leftMaster.config_kP(LEFT_P);
-        leftMaster.config_kI(LEFT_I);
-        leftMaster.config_kD(LEFT_D);
+        leftMaster.config_kP(RobotMap.SLOT_INDEX, LEFT_P);
+        leftMaster.config_kI(RobotMap.SLOT_INDEX, LEFT_I);
+        leftMaster.config_kD(RobotMap.SLOT_INDEX, LEFT_D);
 
-        rightMaster.config_kP(RIGHT_P);
-        rightMaster.config_kI(RIGHT_I);
-        rightMaster.config_kD(RIGHT_D);
+        rightMaster.config_kP(RobotMap.SLOT_INDEX, RIGHT_P);
+        rightMaster.config_kI(RobotMap.SLOT_INDEX, RIGHT_I);
+        rightMaster.config_kD(RobotMap.SLOT_INDEX, RIGHT_D);
 
-        leftMaster.selectProfileSlot(SLOT_INDEX, RobotMap.LOOP_INDEX);
-        rightMaster.selectProfileSlot(SLOT_INDEX, RobotMap.LOOP_INDEX);
+        leftMaster.selectProfileSlot(RobotMap.SLOT_INDEX, RobotMap.LOOP_INDEX);
+        rightMaster.selectProfileSlot(RobotMap.SLOT_INDEX, RobotMap.LOOP_INDEX);
         
-        leftMaster.configSelectedFeedbackSensor(CTRE_MagEncoder_Relative, RobotMap.LOOP_INDEX, 0);
-        rightMaster.configSelectedFeedbackSensor(CTRE_MagEncoder_Relative, RobotMap.LOOP_INDEX, 0);
+        leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, RobotMap.LOOP_INDEX, 0);
+        rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, RobotMap.LOOP_INDEX, 0);
     }
 
     private void followMasters() {
