@@ -53,13 +53,13 @@ public class Drivetrain extends SubsystemBase {
         leftMaster = new HSTalon(RobotMap.DRIVE_IDS[0]);
         leftFollower = new HSTalon(RobotMap.DRIVE_IDS[1]);
         rightMaster = new HSTalon(RobotMap.DRIVE_IDS[2]);
-        rightFollower = new HSTalon(RobotMap.DRIVE_IDS[8]);
+        rightFollower = new HSTalon(RobotMap.DRIVE_IDS[3]);
 
         talonInit();
         Drivetrain.configPositionPIDConstants();
     }    
 
-    public static getInstance() {
+    public static Drivetrain getInstance() {
         if(drivetrain == null) {
             drivetrain = new Drivetrain();
         }
@@ -132,29 +132,5 @@ public class Drivetrain extends SubsystemBase {
         leftMaster.set(ControlMode.PercentOutput, y + x);
         rightMaster.set(ControlMode.PercentOutput, y - x);
     }
-
-    /* public moveForward() {
-
-    }
-
-    public moveBackward() {
-
-    }
-
-    public turnLeft() {
-
-    }
-
-    public turnRight() {
-        
-    }
-
-    public execute() {
-        if(isFinished) {
-            isFinished = false;
-            // Code here
-            isFinished = true;
-        }
-    }  */
     
 }

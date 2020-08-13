@@ -1,9 +1,10 @@
 package frc.robot;
+import edu.wpi.first.wpilibj.CommandBase;
 
 public class DriveToPosition extends CommandBase {
     private int encoderPosition;
     private final int ERROR_THRESHOLD = 50;
-    public DriveToPosition(int ticks){
+    public DriveToPosition(final int ticks){
         addRequirements(Drivetrain.getInstance());
         encoderPositions = ticks;
     }
@@ -23,10 +24,10 @@ public class DriveToPosition extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        return (Drivetrain.getInstance().getLeftMaster().getCloseLoopError(RobotMap.LOOP_INDEX) < ERROR_THRESHOLD && Drivetrain.getInstance().getRightMaster().getCloseLoopError(RobotMap.LOOP_INDEX) < ERROR_THRESHOLD)
+        return (Drivetrain.getInstance().getLeftMaster().getCloseLoopError(RobotMap.LOOP_INDEX) < ERROR_THRESHOLD && Drivetrain.getInstance().getRightMaster().getCloseLoopError(RobotMap.LOOP_INDEX) < ERROR_THRESHOLD);
     }
     @Override
-    public void end(boolean interrupted) {
+    public void end(final boolean interrupted) {
         super.end(interrupted);
         Drivetrain.getInstance().getLeftMaster().set(ControlMode.Disabled, 0);
         Drivetrain.getInstance().getRightMaster().set(ControlMode.Disabled, 0);
